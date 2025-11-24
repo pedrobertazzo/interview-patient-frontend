@@ -7,12 +7,7 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import {
-  createPatient,
-  deletePatient,
-  listPatients,
-  updatePatient,
-} from "../api/patients";
+import { createPatient, deletePatient, listPatients } from "../api/patients";
 import { PatientForm } from "../components/PatientForm";
 import { PatientList } from "../components/PatientList";
 import { PatientRequest, PatientResponse } from "../types";
@@ -44,12 +39,7 @@ export const PatientsPage: React.FC = () => {
 
   async function handleSubmit(data: PatientRequest) {
     try {
-      if (editing) {
-        await updatePatient(editing.id, data);
-        setEditing(null);
-      } else {
-        await createPatient(data);
-      }
+      await createPatient(data);
       await load();
     } catch (e: any) {
       setError(e.message || "Failed to save patient");
@@ -68,8 +58,11 @@ export const PatientsPage: React.FC = () => {
   // Filter patients by name and email
   const filteredPatients = patients.filter((patient) => {
     const fullName = `${patient.firstName} ${patient.lastName}`.toLowerCase();
-    const matchesName = !nameFilter || fullName.includes(nameFilter.toLowerCase());
-    const matchesEmail = !emailFilter || patient.email.toLowerCase().includes(emailFilter.toLowerCase());
+    const matchesName =
+      !nameFilter || fullName.includes(nameFilter.toLowerCase());
+    const matchesEmail =
+      !emailFilter ||
+      patient.email.toLowerCase().includes(emailFilter.toLowerCase());
     return matchesName && matchesEmail;
   });
 
@@ -97,16 +90,12 @@ export const PatientsPage: React.FC = () => {
           sx={{ width: { xs: "100%", sm: 300 } }}
         />
       </Stack>
-      <PatientForm onSubmit={handleSubmit} editing={editing} />
+      <PatientForm onSubmit={handleSubmit} />
       <Divider />
       {loading ? (
         <CircularProgress />
       ) : (
-        <PatientList
-          patients={filteredPatients}
-          onEdit={setEditing}
-          onDelete={handleDelete}
-        />
+        <PatientList patients={filteredPatients} onDelete={handleDelete} />
       )}
     </Stack>
   );

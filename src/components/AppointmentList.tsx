@@ -40,7 +40,7 @@ export const AppointmentList: React.FC<Props> = ({
     <Table size="small">
       <TableHead>
         <TableRow>
-          <TableCell>ID</TableCell>
+          <TableCell>Appointment ID</TableCell>
           <TableCell>Patient ID</TableCell>
           <TableCell>Date & Time</TableCell>
           <TableCell>Reason</TableCell>

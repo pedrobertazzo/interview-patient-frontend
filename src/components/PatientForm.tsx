@@ -1,25 +1,17 @@
 import { Button, Stack, TextField } from "@mui/material";
-import React, { useEffect, useState } from "react";
-import { PatientRequest, PatientResponse } from "../types";
+import React, { useState } from "react";
+import { PatientRequest } from "../types";
 
 interface Props {
   onSubmit: (data: PatientRequest) => Promise<void>;
-  editing?: PatientResponse | null;
 }
 
-export const PatientForm: React.FC<Props> = ({ onSubmit, editing }) => {
+export const PatientForm: React.FC<Props> = ({ onSubmit }) => {
   const [form, setForm] = useState<PatientRequest>({
     firstName: "",
     lastName: "",
     email: "",
   });
-
-  useEffect(() => {
-    if (editing) {
-      const { firstName, lastName, email, phone, dateOfBirth } = editing;
-      setForm({ firstName, lastName, email, phone, dateOfBirth });
-    }
-  }, [editing]);
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = e.target;
@@ -29,7 +21,7 @@ export const PatientForm: React.FC<Props> = ({ onSubmit, editing }) => {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     await onSubmit(form);
-    if (!editing) setForm({ firstName: "", lastName: "", email: "" });
+    setForm({ firstName: "", lastName: "", email: "" });
   }
 
   return (
@@ -78,12 +70,12 @@ export const PatientForm: React.FC<Props> = ({ onSubmit, editing }) => {
           onChange={handleChange}
           InputLabelProps={{ shrink: true }}
         />
-        <Button 
-          type="submit" 
-          variant="contained" 
+        <Button
+          type="submit"
+          variant="contained"
           sx={{ minWidth: 150, whiteSpace: "nowrap" }}
         >
-          {editing ? "Update" : "Create"} Patient
+          "Create Patient"
         </Button>
       </Stack>
     </form>

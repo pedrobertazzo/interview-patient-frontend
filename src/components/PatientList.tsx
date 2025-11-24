@@ -1,5 +1,4 @@
 import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
 import {
   IconButton,
   Table,
@@ -13,20 +12,15 @@ import { PatientResponse } from "../types";
 
 interface Props {
   patients: PatientResponse[];
-  onEdit: (p: PatientResponse) => void;
   onDelete: (id: number) => void;
 }
 
-export const PatientList: React.FC<Props> = ({
-  patients,
-  onEdit,
-  onDelete,
-}) => {
+export const PatientList: React.FC<Props> = ({ patients, onDelete }) => {
   return (
     <Table size="small">
       <TableHead>
         <TableRow>
-          <TableCell>ID</TableCell>
+          <TableCell>Patient ID</TableCell>
           <TableCell>Name</TableCell>
           <TableCell>Email</TableCell>
           <TableCell>Phone</TableCell>
@@ -45,13 +39,6 @@ export const PatientList: React.FC<Props> = ({
             <TableCell>{p.phone || "-"}</TableCell>
             <TableCell>{p.dateOfBirth || "-"}</TableCell>
             <TableCell align="right">
-              <IconButton
-                size="small"
-                onClick={() => onEdit(p)}
-                aria-label="edit"
-              >
-                <EditIcon fontSize="small" />
-              </IconButton>
               <IconButton
                 size="small"
                 onClick={() => onDelete(p.id)}
