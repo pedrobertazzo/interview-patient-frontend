@@ -37,7 +37,10 @@ export const PatientForm: React.FC<Props> = ({ onSubmit, editing }) => {
       <Stack
         spacing={2}
         direction={{ xs: "column", sm: "row" }}
-        flexWrap="wrap"
+        alignItems="center"
+        sx={{
+          flexWrap: { xs: "wrap", sm: "nowrap" },
+        }}
       >
         <TextField
           label="First Name"
@@ -75,7 +78,11 @@ export const PatientForm: React.FC<Props> = ({ onSubmit, editing }) => {
           onChange={handleChange}
           InputLabelProps={{ shrink: true }}
         />
-        <Button type="submit" variant="contained">
+        <Button 
+          type="submit" 
+          variant="contained" 
+          sx={{ minWidth: 150, whiteSpace: "nowrap" }}
+        >
           {editing ? "Update" : "Create"} Patient
         </Button>
       </Stack>

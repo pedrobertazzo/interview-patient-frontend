@@ -3,6 +3,7 @@ import {
   CircularProgress,
   Divider,
   Stack,
+  TextField,
   Typography,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
@@ -21,6 +22,8 @@ export const PatientsPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [editing, setEditing] = useState<PatientResponse | null>(null);
+  const [nameFilter, setNameFilter] = useState<string>("");
+  const [emailFilter, setEmailFilter] = useState<string>("");
 
   async function load() {
     setLoading(true);
@@ -62,17 +65,45 @@ export const PatientsPage: React.FC = () => {
     }
   }
 
+  // Filter patients by name and email
+  const filteredPatients = patients.filter((patient) => {
+    const fullName = `${patient.firstName} ${patient.lastName}`.toLowerCase();
+    const matchesName = !nameFilter || fullName.includes(nameFilter.toLowerCase());
+    const matchesEmail = !emailFilter || patient.email.toLowerCase().includes(emailFilter.toLowerCase());
+    return matchesName && matchesEmail;
+  });
+
   return (
     <Stack spacing={3}>
       <Typography variant="h5">Patients</Typography>
       {error && <Alert severity="error">{error}</Alert>}
+      <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
+        <TextField
+          label="Filter by Name"
+          value={nameFilter}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setNameFilter(e.target.value)
+          }
+          placeholder="Search by first or last name..."
+          sx={{ width: { xs: "100%", sm: 300 } }}
+        />
+        <TextField
+          label="Filter by Email"
+          value={emailFilter}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setEmailFilter(e.target.value)
+          }
+          placeholder="Search by email..."
+          sx={{ width: { xs: "100%", sm: 300 } }}
+        />
+      </Stack>
       <PatientForm onSubmit={handleSubmit} editing={editing} />
       <Divider />
       {loading ? (
         <CircularProgress />
       ) : (
         <PatientList
-          patients={patients}
+          patients={filteredPatients}
           onEdit={setEditing}
           onDelete={handleDelete}
         />

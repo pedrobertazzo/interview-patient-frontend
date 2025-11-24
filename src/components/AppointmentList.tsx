@@ -1,8 +1,6 @@
 import DeleteIcon from "@mui/icons-material/Delete";
 import {
   IconButton,
-  MenuItem,
-  Select,
   Table,
   TableBody,
   TableCell,
@@ -18,12 +16,20 @@ interface Props {
   onStatusChange: (id: number, status: AppointmentStatus) => void;
 }
 
-const statuses: AppointmentStatus[] = [
-  "SCHEDULED",
-  "COMPLETED",
-  "CANCELLED",
-  "NO_SHOW",
-];
+const formatStatus = (status: AppointmentStatus): string => {
+  switch (status) {
+    case "SCHEDULED":
+      return "Scheduled";
+    case "COMPLETED":
+      return "Completed";
+    case "CANCELLED":
+      return "Cancelled";
+    case "NO_SHOW":
+      return "No Show";
+    default:
+      return status;
+  }
+};
 
 export const AppointmentList: React.FC<Props> = ({
   appointments,
@@ -51,21 +57,7 @@ export const AppointmentList: React.FC<Props> = ({
               {new Date(a.appointmentDateTime).toLocaleString()}
             </TableCell>
             <TableCell>{a.reason}</TableCell>
-            <TableCell>
-              <Select
-                size="small"
-                value={a.status}
-                onChange={(e: any) =>
-                  onStatusChange(a.id, e.target.value as AppointmentStatus)
-                }
-              >
-                {statuses.map((s) => (
-                  <MenuItem key={s} value={s}>
-                    {s}
-                  </MenuItem>
-                ))}
-              </Select>
-            </TableCell>
+            <TableCell>{formatStatus(a.status)}</TableCell>
             <TableCell align="right">
               <IconButton
                 size="small"

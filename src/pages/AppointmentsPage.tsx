@@ -3,6 +3,10 @@ import {
   Button,
   CircularProgress,
   Divider,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
   Stack,
   TextField,
   Typography,
@@ -26,13 +30,14 @@ export const AppointmentsPage: React.FC = () => {
   const [appointments, setAppointments] = useState<AppointmentResponse[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [patientFilter, setPatientFilter] = useState<string>("");
+  const [reasonFilter, setReasonFilter] = useState<string>("");
+  const [statusFilter, setStatusFilter] = useState<string>("");
 
-  async function load(patientId?: number) {
+  async function load() {
     setLoading(true);
     setError(null);
     try {
-      const data = await listAppointments(patientId);
+      const data = await listAppointments();
       setAppointments(data);
     } catch (e: any) {
       setError(e.message || "Failed to load appointments");
@@ -48,7 +53,7 @@ export const AppointmentsPage: React.FC = () => {
   async function handleSubmit(data: AppointmentRequest) {
     try {
       await createAppointment(data);
-      await load(data.patientId);
+      await load();
     } catch (e: any) {
       setError(e.message || "Failed to create appointment");
     }
@@ -57,7 +62,7 @@ export const AppointmentsPage: React.FC = () => {
   async function handleDelete(id: number) {
     try {
       await deleteAppointment(id);
-      await load(patientFilter ? Number(patientFilter) : undefined);
+      await load();
     } catch (e: any) {
       setError(e.message || "Failed to delete appointment");
     }
@@ -66,35 +71,47 @@ export const AppointmentsPage: React.FC = () => {
   async function handleStatusChange(id: number, status: AppointmentStatus) {
     try {
       await updateAppointmentStatus(id, status);
-      await load(patientFilter ? Number(patientFilter) : undefined);
+      await load();
     } catch (e: any) {
       setError(e.message || "Failed to update status");
     }
   }
 
-  function applyFilter() {
-    load(patientFilter ? Number(patientFilter) : undefined);
-  }
+  const filteredAppointments = appointments.filter((appointment) => {
+    const matchesReason = !reasonFilter || 
+      appointment.reason.toLowerCase().includes(reasonFilter.toLowerCase());
+    const matchesStatus = !statusFilter || appointment.status === statusFilter;
+    return matchesReason && matchesStatus;
+  });
 
   return (
     <Stack spacing={3}>
       <Typography variant="h5">Appointments</Typography>
       {error && <Alert severity="error">{error}</Alert>}
-      <Stack
-        direction={{ xs: "column", sm: "row" }}
-        spacing={2}
-        alignItems="center"
-      >
+      <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
         <TextField
-          label="Filter by Patient ID"
-          value={patientFilter}
+          label="Filter by Reason"
+          value={reasonFilter}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setPatientFilter(e.target.value)
+            setReasonFilter(e.target.value)
           }
+          placeholder="Search by appointment reason..."
+          sx={{ width: { xs: "100%", sm: 300 } }}
         />
-        <Button variant="outlined" onClick={applyFilter}>
-          Apply Filter
-        </Button>
+        <FormControl sx={{ width: { xs: "100%", sm: 200 } }}>
+          <InputLabel>Filter by Status</InputLabel>
+          <Select
+            value={statusFilter}
+            label="Filter by Status"
+            onChange={(e) => setStatusFilter(e.target.value)}
+          >
+            <MenuItem value="">All</MenuItem>
+            <MenuItem value="SCHEDULED">Scheduled</MenuItem>
+            <MenuItem value="COMPLETED">Completed</MenuItem>
+            <MenuItem value="CANCELLED">Cancelled</MenuItem>
+            <MenuItem value="NO_SHOW">No Show</MenuItem>
+          </Select>
+        </FormControl>
       </Stack>
       <AppointmentForm onSubmit={handleSubmit} />
       <Divider />
@@ -102,7 +119,7 @@ export const AppointmentsPage: React.FC = () => {
         <CircularProgress />
       ) : (
         <AppointmentList
-          appointments={appointments}
+          appointments={filteredAppointments}
           onDelete={handleDelete}
           onStatusChange={handleStatusChange}
         />
