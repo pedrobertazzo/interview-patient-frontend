@@ -16,7 +16,6 @@ export const PatientsPage: React.FC = () => {
   const [patients, setPatients] = useState<PatientResponse[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [editing, setEditing] = useState<PatientResponse | null>(null);
   const [nameFilter, setNameFilter] = useState<string>("");
   const [emailFilter, setEmailFilter] = useState<string>("");
 

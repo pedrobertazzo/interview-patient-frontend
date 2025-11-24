@@ -99,8 +99,9 @@ export const AppointmentsPage: React.FC = () => {
           sx={{ width: { xs: "100%", sm: 300 } }}
         />
         <FormControl sx={{ width: { xs: "100%", sm: 200 } }}>
-          <InputLabel>Filter by Status</InputLabel>
+          <InputLabel id="status-filter-label">Filter by Status</InputLabel>
           <Select
+            labelId="status-filter-label"
             value={statusFilter}
             label="Filter by Status"
             onChange={(e) => setStatusFilter(e.target.value)}

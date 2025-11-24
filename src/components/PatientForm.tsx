@@ -75,7 +75,7 @@ export const PatientForm: React.FC<Props> = ({ onSubmit }) => {
           variant="contained"
           sx={{ minWidth: 150, whiteSpace: "nowrap" }}
         >
-          "Create Patient"
+          Create Patient
         </Button>
       </Stack>
     </form>
