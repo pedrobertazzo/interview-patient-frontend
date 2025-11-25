@@ -8,8 +8,8 @@ export const http = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
-  withCredentials: false, // Set to true if you need to send cookies/auth
-  timeout: 10000, // 10 second timeout
+  withCredentials: false,
+  timeout: 10000,
 });
 
 http.interceptors.response.use(

@@ -11,7 +11,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useEffect, useState } from "react"; // React import retained for clarity though not strictly required
+import React, { useEffect, useState } from "react";
 import {
   createAppointment,
   deleteAppointment,

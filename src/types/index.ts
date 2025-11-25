@@ -1,4 +1,3 @@
-// OpenAPI derived types
 export interface PatientRequest {
   firstName: string;
   lastName: string;
